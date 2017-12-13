@@ -21,7 +21,9 @@ class PayoutAddress extends Component {
   constructor(props){
     super(props);
     this.state = {
-			newVal: this.props.address
+			newVal: this.props.address,
+      msg: '',
+      msgtype: ''
     }
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -29,9 +31,15 @@ class PayoutAddress extends Component {
     this.props.axios.post("user/setpayout",
       {address: this.state.newVal, currency: this.props.currency})
 			.then(res => {
-        alert("saved!")
+        this.setState({
+          msg: 'Successfully updated',
+          msgtype: 'success'
+        })
 			}).catch(error => {
-        alert("error!")
+        this.setState({
+          msg: error.response.data.errors[0].title,
+          msgtype: 'error'
+        })
 			});
 		console.log(this.state.newVal)
 		console.log(this.props.currency)
@@ -41,6 +49,7 @@ class PayoutAddress extends Component {
 			<tr>
 				<th scope="row">{this.props.currency}</th>
 				<td>
+          { this.state.msg.length > 0 && <Alert type={this.state.msgtype} msg={this.state.msg} /> }
 					<div className="input-group">
 						<input type="text" className="form-control" value={this.state.newVal}
 							onChange={(event) => this.setState({newVal: event.target.value})}/>
@@ -113,9 +122,29 @@ const Blocks = () => (
   </div>
 )
 
-class Error extends Component {
+class Alert extends Component {
     render () {
-			return (<div className="alert alert-danger" role="alert">{this.props.msg}</div>)
+      var className = "alert "
+      switch (this.props.type) {
+      case "error":
+        className += "alert-danger"
+        break
+      case "warn":
+        className += "alert-warning"
+        break
+      case "success":
+        className += "alert-success"
+        break
+      case "info":
+        className += "alert-info"
+        break
+      }
+			return (
+        <div className={className} role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          {this.props.msg}
+        </div>)
 		}
 }
 
@@ -163,7 +192,7 @@ class Login extends Component {
               <div style={{float: 'right', fontSize: '80%', position: 'relative', top: '-10px'}}><a href="#">Forgot password?</a></div>
             </div>     
             <div style={{paddingTop: 30}} className="panel-body">
-              { this.state.error.length > 0 && <Error msg={this.state.error} /> }
+              { this.state.error.length > 0 && <Alert type="error" msg={this.state.error} /> }
 
               <div style={{display: 'none'}} id="login-alert" className="alert alert-danger col-sm-12" />
               <form className="form-horizontal" role="form">
