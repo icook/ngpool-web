@@ -26,6 +26,13 @@ class PayoutAddress extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(){
+    this.props.axios.post("user/setpayout",
+      {address: this.state.newVal, currency: this.props.currency})
+			.then(res => {
+        alert("saved!")
+			}).catch(error => {
+        alert("error!")
+			});
 		console.log(this.state.newVal)
 		console.log(this.props.currency)
   }
@@ -35,8 +42,7 @@ class PayoutAddress extends Component {
 				<th scope="row">{this.props.currency}</th>
 				<td>
 					<div className="input-group">
-						<input type="text" value={this.props.address} className="form-control"
-							value={this.state.newVal}
+						<input type="text" className="form-control" value={this.state.newVal}
 							onChange={(event) => this.setState({newVal: event.target.value})}/>
 						<span className="input-group-btn">
 							<button className="btn btn-info" type="button" onClick={() => this.handleSubmit()} >
@@ -55,12 +61,7 @@ class Profile extends Component {
 			user: {},
 			payoutAddrs: {},
     };
-    var instance = axios.create({
-			baseURL: 'http://localhost:3000/v1/',
-			timeout: 1000,
-			headers: {'Authorization': 'Bearer ' + this.props.token}
-		});
-    instance.get("user/me")
+    this.props.axios.get("user/me")
 			.then(res => {
 				var resp = res.data.data
         this.setState({
@@ -74,7 +75,7 @@ class Profile extends Component {
   render() {
 		var addrs = this.state.payoutAddrs
 		var rows = Object.keys(addrs).map((key) => (
-			<PayoutAddress currency={key} address={addrs[key]} />))
+			<PayoutAddress axios={this.props.axios} currency={key} address={addrs[key]} />))
     return (
       <div className="container">    
         <h2>Profile</h2>
@@ -210,11 +211,14 @@ class Login extends Component {
 class App extends Component {
   constructor(props){
     super(props);
+    this.login = this.login.bind(this);
+    this.mkAxios = this.mkAxios.bind(this);
     this.state = {
       loggedIn:false,
       username:'',
       user_id:'',
       token:'',
+      axios: null
     };
     var user = JSON.parse(localStorage.getItem('user'));
     if (user) {
@@ -225,7 +229,14 @@ class App extends Component {
         token: user.token,
       }
     }
-    this.login = this.login.bind(this);
+    this.state.axios = this.mkAxios()
+  }
+  mkAxios() {
+    return axios.create({
+			baseURL: 'http://localhost:3000/v1/',
+			timeout: 1000,
+			headers: {'Authorization': 'Bearer ' + this.state.token}
+    });
   }
   login(username, userId, token){
 		this.setState({
@@ -233,6 +244,7 @@ class App extends Component {
 			username: username,
 			userId: userId,
 			token: token,
+      axios: this.mkAxios()
     })
     localStorage.setItem('user', JSON.stringify({
       username: username, userId: userId, token: token}));
@@ -269,7 +281,7 @@ class App extends Component {
 						<Credits {...props} />
 					)}/>
 					<Route path="/profile" authed={this.state.loggedIn} render={props => (
-						<Profile {...props} token={this.state.token}/>
+						<Profile {...props} axios={this.state.axios}/>
 					)}/>
 					<Route path="/login" render={props => (
 						<Login {...props} login={this.login} authed={this.state.loggedIn} />
