@@ -78,10 +78,15 @@ class Profile extends Component {
 					payoutAddrs: resp["payout_addresses"]
 				})
 			}).catch(error => {
-					this.setState({error: error.response.data.errors[0].title})
+        if (error.response.status === 403) {
+          this.setState({redirect: true})
+        }
+        this.setState({error: error.response.data.errors[0].title})
 			});
   }
   render() {
+    if (this.state.redirect)
+      return (<Redirect to={{pathname: '/logout'}}/>)
 		var addrs = this.state.payoutAddrs
 		var rows = Object.keys(addrs).map((key) => (
 			<PayoutAddress axios={this.props.axios} currency={key} address={addrs[key]} />))
@@ -147,7 +152,19 @@ class Alert extends Component {
         </div>)
 		}
 }
-
+const PrivateRoute = ({ component: Component, render: Render, ...rest }) => (
+  <Route {...rest} render={props => (
+    rest.authed ? (
+      Render ? (
+       Render()
+      ) : (
+        <Component {...props}/>
+      )
+    ) : (
+      <Redirect to={{ pathname: '/login', state: { from: props.location } }}/>
+    )
+  )}/>
+)
 class Login extends Component {
   constructor(props){
     super(props);
@@ -241,31 +258,35 @@ class App extends Component {
   constructor(props){
     super(props);
     this.login = this.login.bind(this);
-    this.mkAxios = this.mkAxios.bind(this);
+    this.logout = this.logout.bind(this);
     this.state = {
       loggedIn:false,
       username:'',
       user_id:'',
       token:'',
-      axios: null
+      axios: null,
+      axios: axios.create({
+        baseURL: 'http://localhost:3000/v1/',
+        timeout: 1000,
+      })
     };
+  }
+  componentDidMount() {
     var user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-      this.state = {
-        loggedIn: true,
-        username: user.username,
-        userId: user.userId,
-        token: user.token,
-      }
+      this.login(user.username, user.userId, user.token)
     }
-    this.state.axios = this.mkAxios()
   }
-  mkAxios() {
-    return axios.create({
-			baseURL: 'http://localhost:3000/v1/',
-			timeout: 1000,
-			headers: {'Authorization': 'Bearer ' + this.state.token}
-    });
+  logout() {
+    localStorage.removeItem('user')
+		this.setState({
+			loggedIn: false,
+			username: '',
+			userId: null,
+			token: '',
+    })
+    console.log("logout")
+    this.state.axios.defaults.headers.common['Authorization'] = ''
   }
   login(username, userId, token){
 		this.setState({
@@ -273,8 +294,8 @@ class App extends Component {
 			username: username,
 			userId: userId,
 			token: token,
-      axios: this.mkAxios()
     })
+    this.state.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
     localStorage.setItem('user', JSON.stringify({
       username: username, userId: userId, token: token}));
   }
@@ -298,23 +319,37 @@ class App extends Component {
 								<ul className="nav navbar-nav">
 									<li><Link to="/">Blocks</Link></li>
 									{ this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
-									{ this.state.loggedIn && <li><Link to="/profile">Profile</Link></li> }
-									{ !this.state.loggedIn &&
-                    <li><Link to="/login">Login</Link></li>
-                  }
 								</ul>
+                <ul className="nav navbar-nav navbar-right">
+									{ !this.state.loggedIn &&
+                    <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
+                  }
+									{ !this.state.loggedIn &&
+                    <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
+                  }
+									{ this.state.loggedIn &&
+                      <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>
+                  }
+									{ this.state.loggedIn &&
+                      <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
+                  }
+                </ul>
 							</div>
 						</div>
 					</nav>
 					<Route path="/credits" authed={this.state.loggedIn} render={props => (
 						<Credits {...props} />
 					)}/>
-					<Route path="/profile" authed={this.state.loggedIn} render={props => (
+					<PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
 						<Profile {...props} axios={this.state.axios}/>
 					)}/>
 					<Route path="/login" render={props => (
 						<Login {...props} login={this.login} authed={this.state.loggedIn} />
 					)}/>
+					<Route path="/logout" render={props => {
+            this.logout()
+            return (<Redirect to={{ pathname: '/login'}}/>)
+          }}/>
 					<Route exact path="/" component={Blocks}/>
 				</div>
 			</Router>
