@@ -70,6 +70,8 @@ class Profile extends Component {
 			user: {},
 			payoutAddrs: {},
     };
+  }
+  componentDidMount() {
     this.props.axios.get("user/me")
 			.then(res => {
 				var resp = res.data.data
@@ -121,11 +123,14 @@ class Profile extends Component {
     )}
 }
 
-const Blocks = () => (
-  <div>
-    <h2>Recent Blocks</h2>
-  </div>
-)
+class Blocks extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Recent Blocks</h2>
+      </div>
+    )}
+}
 
 class Alert extends Component {
     render () {
@@ -264,14 +269,13 @@ class App extends Component {
       username:'',
       user_id:'',
       token:'',
-      axios: null,
       axios: axios.create({
         baseURL: 'http://localhost:3000/v1/',
         timeout: 1000,
       })
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     var user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       this.login(user.username, user.userId, user.token)
