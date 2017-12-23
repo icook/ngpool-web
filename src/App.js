@@ -124,10 +124,45 @@ class Profile extends Component {
 }
 
 class Blocks extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      blocks: []
+    }
+  }
+  componentDidMount() {
+    this.props.axios.get("blocks")
+			.then(res => {
+        this.setState({blocks: res.data.data.blocks})
+			}).catch(error => {
+        console.log(error)
+			});
+  }
   render() {
+    var blocks = this.state.blocks
+		var rows = Object.keys(blocks).map((key) => (
+			<tr>
+				<td>{blocks[key].currency}</td>
+				<td>{blocks[key].hash}</td>
+				<td>{blocks[key].powalgo}</td>
+				<td>{blocks[key].mined_at}</td>
+			</tr>))
     return (
-      <div>
+      <div className="container">    
         <h2>Recent Blocks</h2>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Currency</th>
+              <th scope="col">Hash</th>
+              <th scope="col">Algo</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+						{rows}
+          </tbody>
+        </table>
       </div>
     )}
 }
@@ -321,7 +356,7 @@ class App extends Component {
 
 							<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 								<ul className="nav navbar-nav">
-									<li><Link to="/">Blocks</Link></li>
+									<li><Link to="/blocks">Blocks</Link></li>
 									{ this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
 								</ul>
                 <ul className="nav navbar-nav navbar-right">
@@ -354,7 +389,9 @@ class App extends Component {
             this.logout()
             return (<Redirect to={{ pathname: '/login'}}/>)
           }}/>
-					<Route exact path="/" component={Blocks}/>
+					<Route exact path="/" render={props => (
+						<Blocks {...props} axios={this.state.axios}/>
+					)}/>
 				</div>
 			</Router>
 		)
