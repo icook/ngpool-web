@@ -68,16 +68,26 @@ class Blocks extends Component {
   constructor(props){
     super(props);
     this.state = {
-      blocks: []
+      blocks: [],
+      maturity: null,
     }
+    this.load = this.load.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
-  componentDidMount() {
-    this.props.axios.get("blocks")
-			.then(res => {
+  load() {
+    this.props.axios.get("blocks",
+      {params: {maturity: this.state.maturity}}
+    ).then(res => {
         this.setState({blocks: res.data.data.blocks})
 			}).catch(error => {
         console.log(error)
 			});
+  }
+  setFilter(obj) {
+    this.setState(obj, this.load)
+  }
+  componentDidMount() {
+    this.load()
   }
   render() {
     var blocks = this.state.blocks
@@ -85,7 +95,18 @@ class Blocks extends Component {
 			<BlockRow axios={this.props.axios} block={blocks[key]} />))
     return (
       <div className="container">    
-        <h2>Recent Blocks</h2>
+        <div className="col-md-4">
+          <h2>Recent Blocks</h2>
+          <div className="form-group">
+            <label>Maturity</label>
+            <select value={this.state.username} className="form-control"
+              onChange={(e) => this.setFilter({maturity: e.target.value})}>
+              <option value={null}>Any</option>
+              <option value="mature">Mature</option>
+              <option value="immature">Immature</option>
+            </select>
+          </div>
+        </div>
         <table className="table table-striped">
           <thead>
             <tr>
