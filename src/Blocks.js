@@ -73,6 +73,8 @@ class Blocks extends Component {
     this.state = {
       blocks: [],
       maturity: null,
+      currency: null,
+      algo: null,
       page: 0,
       loading: false,
     }
@@ -84,6 +86,8 @@ class Blocks extends Component {
       this.props.axios.get("blocks",
         {params: {
           maturity: this.state.maturity,
+          currency: this.state.currency,
+          algo: this.state.algo,
           page: this.state.page,
           page_size: 25,
         }}
@@ -116,19 +120,33 @@ class Blocks extends Component {
       <div className="container">    
         <h2>Recent Blocks</h2>
         <div className="row">
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Maturity</label>
-              <Select value={this.state.maturity} multi={true} simpleValue={true}
-                onChange={(e) => this.setFilter({'maturity': e})}
-                options={[
-                    { value: 'mature', label: 'Mature' },
-                    { value: 'immature', label: 'Immature' },
-                    { value: 'orphan', label: 'Orphan' },
-                  ]}/>
-            </div>
+          <div className="col-md-3 form-group">
+            <label>Algo</label>
+            <Select value={this.state.algo} multi={true} simpleValue={true}
+              onChange={(e) => this.setFilter({'algo': e})}
+              options={[
+                  { value: 'scrypt', label: 'Scrypt' },
+                ]}/>
           </div>
-          <div className="col-md-4 col-md-offset-4 text-right">
+          <div className="col-md-3 form-group">
+            <label>Currency</label>
+            <Select value={this.state.currency} multi={true} simpleValue={true}
+              onChange={(e) => this.setFilter({'currency': e})}
+              options={[
+                  { value: 'LTC_T', label: 'LTC_T' },
+              ]}/>
+          </div>
+          <div className="col-md-3 form-group">
+            <label>Maturity</label>
+            <Select value={this.state.maturity} multi={true} simpleValue={true}
+              onChange={(e) => this.setFilter({'maturity': e})}
+              options={[
+                  { value: 'mature', label: 'Mature' },
+                  { value: 'immature', label: 'Immature' },
+                  { value: 'orphan', label: 'Orphan' },
+                ]}/>
+          </div>
+          <div className="col-md-3 text-right">
             <a onClick={this.load} className="btn btn-default"><i className="glyphicon glyphicon-refresh" /></a>
           </div>
         </div>
@@ -151,7 +169,7 @@ class Blocks extends Component {
       <nav aria-label="...">
         <ul className="pager">
           <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page - 1})}>Previous</a></li>
-          <li className="active"><a>{ this.state.page + 1} <span class="sr-only">(current)</span></a></li>
+          <li className="active"><a>{ this.state.page + 1} <span className="sr-only">(current)</span></a></li>
           <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page + 1})}>Next</a></li>
         </ul>
       </nav>
