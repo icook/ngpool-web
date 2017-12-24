@@ -109,21 +109,23 @@ class Blocks extends Component {
     }
     return (
       <div className="container">    
-        <div className="col-md-4">
-          <h2>Recent Blocks</h2>
-          <div className="form-group">
-            <label>Maturity</label>
-            <Select value={this.state.maturity} multi={true} simpleValue={true}
-              onChange={(e) => this.setFilter({'maturity': e})}
-              options={[
-                  { value: 'mature', label: 'Mature' },
-                  { value: 'immature', label: 'Immature' },
-                  { value: 'orhpan', label: 'Orphan' },
-                ]}/>
+        <h2>Recent Blocks</h2>
+        <div className="row">
+          <div className="col-md-4">
+            <div className="form-group">
+              <label>Maturity</label>
+              <Select value={this.state.maturity} multi={true} simpleValue={true}
+                onChange={(e) => this.setFilter({'maturity': e})}
+                options={[
+                    { value: 'mature', label: 'Mature' },
+                    { value: 'immature', label: 'Immature' },
+                    { value: 'orhpan', label: 'Orphan' },
+                  ]}/>
+            </div>
           </div>
-        </div>
-        <div className="col-md-4 col-md-offset-4 text-right">
-          <a onClick={this.load} className="btn btn-default"><i className="glyphicon glyphicon-refresh" /></a>
+          <div className="col-md-4 col-md-offset-4 text-right">
+            <a onClick={this.load} className="btn btn-default"><i className="glyphicon glyphicon-refresh" /></a>
+          </div>
         </div>
         <table className="table table-striped">
           <thead>
