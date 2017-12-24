@@ -37,9 +37,9 @@ class Services extends Component {
         var svc = services[key]
         return (
         <tr>
-          <td>{svc.ServiceID}</td>
-          <td><ReactJson src={svc.Status} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
-          <td><ReactJson src={svc.Labels} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
+          <td>{svc.service_id}</td>
+          <td><ReactJson src={svc.status} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
+          <td><ReactJson src={svc.labels} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
           <td><TimeAgo date={svc.update_time} /></td>
         </tr>)})
     }
