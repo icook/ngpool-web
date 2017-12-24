@@ -45,7 +45,7 @@ class BlockRow extends Component {
             </tr>
             <tr>
               <th scope="col">Payout Data</th>
-              <td><code>{JSON.stringify(det.payout_data, null, 2)}</code></td>
+              <td><pre>{JSON.stringify(det.payout_data, null, 2)}</pre></td>
             </tr>
             </tbody>
           </table>
