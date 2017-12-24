@@ -10,8 +10,10 @@ import "../node_modules/bootstrap-sass/assets/javascripts/bootstrap.js";
 import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 import axios from 'axios';
 import './App.scss';
+
 import Profile from './Profile.js'
 import Blocks from './Blocks.js'
+import Services from './Services.js'
 
 const Credits = () => (
   <div>
@@ -208,7 +210,7 @@ class App extends Component {
 
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
-                  <li><Link to="/blocks">Blocks</Link></li>
+                  <li><Link to="/">Blocks</Link></li>
                   { this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
@@ -243,6 +245,9 @@ class App extends Component {
             }}/>
           <Route exact path="/" render={props => (
             <Blocks {...props} axios={this.state.axios}/>
+            )}/>
+          <Route exact path="/services" render={props => (
+            <Services {...props} axios={this.state.axios}/>
             )}/>
           <footer class="footer">
             <div class="container">
