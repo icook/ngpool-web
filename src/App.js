@@ -9,6 +9,7 @@ import "../node_modules/jquery/dist/jquery.js";
 import "../node_modules/bootstrap-sass/assets/javascripts/bootstrap.js";
 import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import './App.scss';
 
 import Profile from './Profile.js'
@@ -91,10 +92,16 @@ class App extends Component {
       userId: null,
       token: '',
     })
-    console.log("logout")
     this.state.axios.defaults.headers.common['Authorization'] = ''
   }
   login(username, userId, token){
+    var tokenInfo = jwtDecode(token)
+    var remaining = tokenInfo.exp - (Date.now() / 1000)
+    if (remaining <= 0) {
+      this.logout()
+    } else {
+      console.log((remaining / 60) + " minutes remaining on session")
+    }
     this.setState({
       loggedIn: true,
       username: username,
