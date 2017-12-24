@@ -193,60 +193,68 @@ class App extends Component {
   render() {
     return (
 			<Router>
-				<div>
-					<nav className="navbar navbar-default">
-						<div className="container-fluid">
-							<div className="navbar-header">
-								<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-									<span className="sr-only">Toggle navigation</span>
-									<span className="icon-bar"></span>
-									<span className="icon-bar"></span>
-									<span className="icon-bar"></span>
-								</button>
-								<Link className="navbar-brand" to="/">NgPool</Link>
-							</div>
+        <div>
+          <nav className="navbar navbar-default">
+            <div className="container-fluid">
+              <div className="navbar-header">
+                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                  <span className="sr-only">Toggle navigation</span>
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                </button>
+                <Link className="navbar-brand" to="/">NgPool</Link>
+              </div>
 
-							<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-								<ul className="nav navbar-nav">
-									<li><Link to="/blocks">Blocks</Link></li>
-									{ this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
-								</ul>
+              <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul className="nav navbar-nav">
+                  <li><Link to="/blocks">Blocks</Link></li>
+                  { this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
+                </ul>
                 <ul className="nav navbar-nav navbar-right">
-									{ !this.state.loggedIn &&
+                  { !this.state.loggedIn &&
                     <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
                   }
-									{ !this.state.loggedIn &&
+                  { !this.state.loggedIn &&
                     <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
                   }
-									{ this.state.loggedIn &&
+                  { this.state.loggedIn &&
                       <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>
                   }
-									{ this.state.loggedIn &&
+                  { this.state.loggedIn &&
                       <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                   }
                 </ul>
-							</div>
-						</div>
-					</nav>
-					<Route path="/credits" authed={this.state.loggedIn} render={props => (
-						<Credits {...props} />
-					)}/>
-					<PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
-						<Profile {...props} axios={this.state.axios}/>
-					)}/>
-					<Route path="/login" render={props => (
-						<Login {...props} login={this.login} authed={this.state.loggedIn} />
-					)}/>
-					<Route path="/logout" render={props => {
+              </div>
+            </div>
+          </nav>
+          <Route path="/credits" authed={this.state.loggedIn} render={props => (
+            <Credits {...props} />
+          )}/>
+          <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
+            <Profile {...props} axios={this.state.axios}/>
+          )}/>
+          <Route path="/login" render={props => (
+            <Login {...props} login={this.login} authed={this.state.loggedIn} />
+          )}/>
+          <Route path="/logout" render={props => {
             this.logout()
             return (<Redirect to={{ pathname: '/login'}}/>)
           }}/>
-					<Route exact path="/" render={props => (
-						<Blocks {...props} axios={this.state.axios}/>
-					)}/>
-				</div>
+          <Route exact path="/" render={props => (
+            <Blocks {...props} axios={this.state.axios}/>
+          )}/>
+					<footer class="footer">
+						<div class="container">
+							<div class="col-md-offset-8">
+								<h4>Utilities</h4>
+								<p class="text-muted"><Link to="/services">Service Status</Link></p>
+							</div>
+						</div>
+					</footer>
+        </div>
 			</Router>
-		)
-	}
+      )
+}
 }
 export default App
