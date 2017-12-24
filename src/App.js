@@ -36,13 +36,13 @@ export class Alert extends Component {
         className += "alert-info"
         break
       }
-			return (
+      return (
         <div className={className} role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
           {this.props.msg}
         </div>)
-		}
+    }
 }
 const PrivateRoute = ({ component: Component, render: Render, ...rest }) => (
   <Route {...rest} render={props => (
@@ -72,15 +72,15 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event){
-		this.setState({error: ''})
+    this.setState({error: ''})
     axios.post(`http://localhost:3000/v1/login`, this.state)
-			.then(res => {
-				var resp = res.data.data
-				this.props.login(resp.username, resp.user_id, resp.token);
+      .then(res => {
+        var resp = res.data.data
+        this.props.login(resp.username, resp.user_id, resp.token);
         this.setState({ redirectToReferrer: true })
-			}).catch(error => {
-					this.setState({error: error.response.data.errors[0].title})
-			});
+      }).catch(error => {
+          this.setState({error: error.response.data.errors[0].title})
+      });
   }
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
@@ -91,7 +91,7 @@ class Login extends Component {
         <Redirect to={from}/>
       )
     }
-    
+
     return (
       <div className="container">    
         <div id="loginbox" style={{marginTop: 50}} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
@@ -108,7 +108,7 @@ class Login extends Component {
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
                   <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
- type="text" className="form-control" placeholder="username" />
+                    type="text" className="form-control" placeholder="username" />
                 </div>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-lock" /></span>
@@ -143,7 +143,7 @@ class Login extends Component {
           </div>  
         </div>
       </div>
-    )}
+      )}
 }
 
 class App extends Component {
@@ -170,21 +170,21 @@ class App extends Component {
   }
   logout() {
     localStorage.removeItem('user')
-		this.setState({
-			loggedIn: false,
-			username: '',
-			userId: null,
-			token: '',
+    this.setState({
+      loggedIn: false,
+      username: '',
+      userId: null,
+      token: '',
     })
     console.log("logout")
     this.state.axios.defaults.headers.common['Authorization'] = ''
   }
   login(username, userId, token){
-		this.setState({
-			loggedIn: true,
-			username: username,
-			userId: userId,
-			token: token,
+    this.setState({
+      loggedIn: true,
+      username: username,
+      userId: userId,
+      token: token,
     })
     this.state.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
     localStorage.setItem('user', JSON.stringify({
@@ -192,7 +192,7 @@ class App extends Component {
   }
   render() {
     return (
-			<Router>
+      <Router>
         <div>
           <nav className="navbar navbar-default">
             <div className="container-fluid">
@@ -213,16 +213,16 @@ class App extends Component {
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { !this.state.loggedIn &&
-                    <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
+                  <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
                   }
                   { !this.state.loggedIn &&
-                    <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
+                  <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
                   }
                   { this.state.loggedIn &&
-                      <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>
+                  <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>
                   }
                   { this.state.loggedIn &&
-                      <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
+                  <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                   }
                 </ul>
               </div>
@@ -230,30 +230,30 @@ class App extends Component {
           </nav>
           <Route path="/credits" authed={this.state.loggedIn} render={props => (
             <Credits {...props} />
-          )}/>
+            )}/>
           <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
             <Profile {...props} axios={this.state.axios}/>
-          )}/>
+            )}/>
           <Route path="/login" render={props => (
             <Login {...props} login={this.login} authed={this.state.loggedIn} />
-          )}/>
+            )}/>
           <Route path="/logout" render={props => {
             this.logout()
             return (<Redirect to={{ pathname: '/login'}}/>)
-          }}/>
+            }}/>
           <Route exact path="/" render={props => (
             <Blocks {...props} axios={this.state.axios}/>
-          )}/>
-					<footer class="footer">
-						<div class="container">
-							<div class="col-md-offset-8">
-								<h4>Utilities</h4>
-								<p class="text-muted"><Link to="/services">Service Status</Link></p>
-							</div>
-						</div>
-					</footer>
+            )}/>
+          <footer class="footer">
+            <div class="container">
+              <div class="col-md-offset-8">
+                <h4>Utilities</h4>
+                <p class="text-muted"><Link to="/services">Service Status</Link></p>
+              </div>
+            </div>
+          </footer>
         </div>
-			</Router>
+      </Router>
       )
 }
 }

@@ -8,7 +8,7 @@ class BlockRow extends Component {
   constructor(props){
     super(props);
     this.state = {
-			extra: null,
+      extra: null,
     }
     this.load = this.load.bind(this);
   }
@@ -18,11 +18,11 @@ class BlockRow extends Component {
       return
     }
     this.props.axios.get("block/" + this.props.block.hash)
-			.then(res => {
+      .then(res => {
         this.setState({extra: res.data.data.block})
-			}).catch(error => {
+      }).catch(error => {
         console.log(error)
-			});
+      });
   }
   render() {
     var block = this.props.block;
@@ -30,8 +30,8 @@ class BlockRow extends Component {
     if (this.state.extra) {
       var det = this.state.extra
       extra = (
-			<tr>
-				<td colSpan="7">
+      <tr>
+        <td colSpan="7">
           <h4>Block Details</h4>
           <table className="table table-striped">
             <tbody>
@@ -50,7 +50,7 @@ class BlockRow extends Component {
             </tbody>
           </table>
         </td>
-			</tr>)
+      </tr>)
     }
     return ([
       <tr onClick={this.load} style={{cursor: 'pointer'}}>
@@ -125,15 +125,15 @@ class Blocks extends Component {
             <Select value={this.state.algo} multi={true} simpleValue={true}
               onChange={(e) => this.setFilter({'algo': e})}
               options={[
-                  { value: 'scrypt', label: 'Scrypt' },
-                ]}/>
+              { value: 'scrypt', label: 'Scrypt' },
+              ]}/>
           </div>
           <div className="col-md-3 form-group">
             <label>Currency</label>
             <Select value={this.state.currency} multi={true} simpleValue={true}
               onChange={(e) => this.setFilter({'currency': e})}
               options={[
-                  { value: 'LTC_T', label: 'LTC_T' },
+              { value: 'LTC_T', label: 'LTC_T' },
               ]}/>
           </div>
           <div className="col-md-3 form-group">
@@ -141,10 +141,10 @@ class Blocks extends Component {
             <Select value={this.state.maturity} multi={true} simpleValue={true}
               onChange={(e) => this.setFilter({'maturity': e})}
               options={[
-                  { value: 'mature', label: 'Mature' },
-                  { value: 'immature', label: 'Immature' },
-                  { value: 'orphan', label: 'Orphan' },
-                ]}/>
+              { value: 'mature', label: 'Mature' },
+              { value: 'immature', label: 'Immature' },
+              { value: 'orphan', label: 'Orphan' },
+              ]}/>
           </div>
           <div className="col-md-3 text-right">
             <a onClick={this.load} className="btn btn-default"><i className="glyphicon glyphicon-refresh" /></a>
@@ -163,18 +163,18 @@ class Blocks extends Component {
             </tr>
           </thead>
           <tbody>
-						{rows}
+            {rows}
           </tbody>
         </table>
-      <nav aria-label="...">
-        <ul className="pager">
-          <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page - 1})}>Previous</a></li>
-          <li className="active"><a>{ this.state.page + 1} <span className="sr-only">(current)</span></a></li>
-          <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page + 1})}>Next</a></li>
-        </ul>
-      </nav>
+        <nav aria-label="...">
+          <ul className="pager">
+            <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page - 1})}>Previous</a></li>
+            <li className="active"><a>{ this.state.page + 1} <span className="sr-only">(current)</span></a></li>
+            <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page + 1})}>Next</a></li>
+          </ul>
+        </nav>
       </div>
-    )}
+      )}
 }
 
 export default Blocks
