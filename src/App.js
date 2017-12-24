@@ -150,7 +150,7 @@ class App extends Component {
             <Profile {...props} axios={this.state.axios}/>
             )}/>
           <Route path="/login" render={props => (
-            <Login {...props} login={this.login} authed={this.state.loggedIn} />
+            <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
             )}/>
           <Route path="/logout" render={props => {
             this.logout()

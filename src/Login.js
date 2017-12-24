@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {Redirect} from 'react-router-dom'
 import {Alert} from './App.js'
 
@@ -19,7 +18,7 @@ class Login extends Component {
   }
   handleSubmit(event){
     this.setState({error: ''})
-    axios.post(`http://localhost:3000/v1/login`, this.state)
+    this.props.axios.post(`http://localhost:3000/v1/login`, this.state)
       .then(res => {
         var resp = res.data.data
         this.props.login(resp.username, resp.user_id, resp.token);
