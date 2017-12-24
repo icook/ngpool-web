@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TimeAgo from 'react-timeago'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 class BlockRow extends Component {
   constructor(props){
@@ -83,8 +85,8 @@ class Blocks extends Component {
         console.log(error)
 			});
   }
-  setFilter(obj) {
-    this.setState(obj, this.load)
+  setFilter(update) {
+    this.setState(update, this.load)
   }
   componentDidMount() {
     this.load()
@@ -99,12 +101,13 @@ class Blocks extends Component {
           <h2>Recent Blocks</h2>
           <div className="form-group">
             <label>Maturity</label>
-            <select value={this.state.username} className="form-control"
-              onChange={(e) => this.setFilter({maturity: e.target.value})}>
-              <option value={null}>Any</option>
-              <option value="mature">Mature</option>
-              <option value="immature">Immature</option>
-            </select>
+            <Select value={this.state.maturity} multi={true} simpleValue={true}
+              onChange={(e) => this.setFilter({'maturity': e})}
+              options={[
+                  { value: 'mature', label: 'Mature' },
+                  { value: 'immature', label: 'Immature' },
+                  { value: 'orhpan', label: 'Orphan' },
+                ]}/>
           </div>
         </div>
         <table className="table table-striped">
