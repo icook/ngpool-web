@@ -38,6 +38,7 @@
     "react-addons-linked-state-mixin": "^15.6.2",
     "react-dev-utils": "^4.2.1",
     "react-dom": "^16.2.0",
+    "react-md-spinner": "^0.2.5",
     "react-router-dom": "^4.2.2",
     "react-select": "^1.1.0",
     "react-timeago": "^3.4.3",

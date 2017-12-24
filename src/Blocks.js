@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TimeAgo from 'react-timeago'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import MDSpinner from 'react-md-spinner';
 
 class BlockRow extends Component {
   constructor(props){
@@ -72,18 +73,22 @@ class Blocks extends Component {
     this.state = {
       blocks: [],
       maturity: null,
+      loading: false,
     }
     this.load = this.load.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
   load() {
-    this.props.axios.get("blocks",
-      {params: {maturity: this.state.maturity}}
-    ).then(res => {
-        this.setState({blocks: res.data.data.blocks})
-			}).catch(error => {
-        console.log(error)
-			});
+    this.setState({loading: true}, () => {
+      this.props.axios.get("blocks",
+        {params: {maturity: this.state.maturity}}
+      ).then(res => {
+          this.setState({blocks: res.data.data.blocks, loading: false})
+        }).catch(error => {
+          console.log(error)
+          this.setState({loading: false})
+        })
+    })
   }
   setFilter(update) {
     this.setState(update, this.load)
@@ -93,8 +98,15 @@ class Blocks extends Component {
   }
   render() {
     var blocks = this.state.blocks
-		var rows = Object.keys(blocks).map((key) => (
-			<BlockRow axios={this.props.axios} block={blocks[key]} />))
+    var rows
+    if (this.state.loading) {
+      rows = (<tr><td colSpan="8" className="jumbotron text-center">
+        <div className="jumbotron"><MDSpinner size={50}/></div>
+      </td></tr>)
+    } else {
+      rows = Object.keys(blocks).map((key) => (
+        <BlockRow axios={this.props.axios} block={blocks[key]} />))
+    }
     return (
       <div className="container">    
         <div className="col-md-4">
@@ -109,6 +121,9 @@ class Blocks extends Component {
                   { value: 'orhpan', label: 'Orphan' },
                 ]}/>
           </div>
+        </div>
+        <div className="col-md-4 col-md-offset-4 text-right">
+          <a onClick={this.load} className="btn btn-default"><i className="glyphicon glyphicon-refresh" /></a>
         </div>
         <table className="table table-striped">
           <thead>
