@@ -73,6 +73,7 @@ class Blocks extends Component {
     this.state = {
       blocks: [],
       maturity: null,
+      page: 0,
       loading: false,
     }
     this.load = this.load.bind(this);
@@ -81,7 +82,11 @@ class Blocks extends Component {
   load() {
     this.setState({loading: true}, () => {
       this.props.axios.get("blocks",
-        {params: {maturity: this.state.maturity}}
+        {params: {
+          maturity: this.state.maturity,
+          page: this.state.page,
+          page_size: 25,
+        }}
       ).then(res => {
           this.setState({blocks: res.data.data.blocks, loading: false})
         }).catch(error => {
@@ -143,6 +148,13 @@ class Blocks extends Component {
 						{rows}
           </tbody>
         </table>
+      <nav aria-label="...">
+        <ul className="pager">
+          <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page - 1})}>Previous</a></li>
+          <li className="active"><a>{ this.state.page + 1} <span class="sr-only">(current)</span></a></li>
+          <li><a className="btn-lg" onClick={() => this.setFilter({page: this.state.page + 1})}>Next</a></li>
+        </ul>
+      </nav>
       </div>
     )}
 }
