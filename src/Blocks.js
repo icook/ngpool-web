@@ -119,7 +119,7 @@ class Blocks extends Component {
                 options={[
                     { value: 'mature', label: 'Mature' },
                     { value: 'immature', label: 'Immature' },
-                    { value: 'orhpan', label: 'Orphan' },
+                    { value: 'orphan', label: 'Orphan' },
                   ]}/>
             </div>
           </div>
