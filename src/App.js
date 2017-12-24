@@ -39,6 +39,8 @@ export class Alert extends Component {
       case "info":
         className += "alert-info"
         break
+      default:
+        className += "alert-warning"
       }
       return (
         <div className={className} role="alert">
@@ -169,11 +171,11 @@ class App extends Component {
           <Route exact path="/services" render={props => (
             <Services {...props} axios={this.state.axios}/>
             )}/>
-          <footer class="footer">
-            <div class="container">
-              <div class="col-md-offset-8">
+          <footer className="footer">
+            <div className="container">
+              <div className="col-md-offset-8">
                 <h4>Utilities</h4>
-                <p class="text-muted"><Link to="/services">Service Status</Link></p>
+                <p className="text-muted"><Link to="/services">Service Status</Link></p>
               </div>
             </div>
           </footer>

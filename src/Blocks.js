@@ -26,11 +26,11 @@ class BlockRow extends Component {
   }
   render() {
     var block = this.props.block;
-    var extra = '';
+    var ret = []
     if (this.state.extra) {
       var det = this.state.extra
-      extra = (
-      <tr>
+      ret.push(
+      <tr key={block.hash + "-extra"}>
         <td colSpan="7">
           <h4>Block Details</h4>
           <table className="table table-striped">
@@ -52,8 +52,8 @@ class BlockRow extends Component {
         </td>
       </tr>)
     }
-    return ([
-      <tr onClick={this.load} style={{cursor: 'pointer'}}>
+    ret.push(
+      <tr key={block.hash} onClick={this.load} style={{cursor: 'pointer'}}>
         <td><i className="glyphicon glyphicon-plus" /></td>
         <td>{block.currency}</td>
         <td>{block.height}</td>
@@ -61,9 +61,9 @@ class BlockRow extends Component {
         <td>{block.powalgo}</td>
         <td><TimeAgo date={block.mined_at} /></td>
         <td>{block.status}</td>
-      </tr>,
-      extra
-    ])
+      </tr>
+    )
+    return ret
   }
 }
 
@@ -114,7 +114,7 @@ class Blocks extends Component {
       </td></tr>)
     } else {
       rows = Object.keys(blocks).map((key) => (
-        <BlockRow axios={this.props.axios} block={blocks[key]} />))
+        <BlockRow key={key} axios={this.props.axios} block={blocks[key]} />))
     }
     return (
       <div className="container">    

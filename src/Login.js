@@ -43,13 +43,13 @@ class Login extends Component {
           <div className="panel panel-info">
             <div className="panel-heading">
               <div className="panel-title">Sign In</div>
-              <div style={{float: 'right', fontSize: '80%', position: 'relative', top: '-10px'}}><a href="#">Forgot password?</a></div>
+              <div style={{float: 'right', fontSize: '80%', position: 'relative', top: '-10px'}}><a>Forgot password?</a></div>
             </div>     
             <div style={{paddingTop: 30}} className="panel-body">
               { this.state.error.length > 0 && <Alert type="error" msg={this.state.error} /> }
 
               <div style={{display: 'none'}} id="login-alert" className="alert alert-danger col-sm-12" />
-              <form className="form-horizontal" role="form">
+              <form className="form-horizontal">
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
                   <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
