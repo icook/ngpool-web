@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TimeAgo from 'react-timeago'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import ReactJson from 'react-json-view'
 import MDSpinner from 'react-md-spinner';
 
 class BlockRow extends Component {
@@ -45,7 +46,7 @@ class BlockRow extends Component {
             </tr>
             <tr>
               <th scope="col">Payout Data</th>
-              <td><pre>{JSON.stringify(det.payout_data, null, 2)}</pre></td>
+              <td><ReactJson src={det.payout_data} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
             </tr>
             </tbody>
           </table>
