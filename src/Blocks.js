@@ -31,7 +31,17 @@ class BlockRow extends Component {
   }
   render() {
     var block = this.props.block;
-    var ret = []
+    var ret = [(
+      <tr key={block.hash} onClick={this.load} style={{cursor: 'pointer'}}>
+        <td><i className="glyphicon glyphicon-plus" /></td>
+        <td>{block.currency}</td>
+        <td>{block.height}</td>
+        <td>{block.difficulty}</td>
+        <td>{block.powalgo}</td>
+        <td><TimeAgo date={block.mined_at} /></td>
+        <td>{block.status}</td>
+      </tr>
+    )]
     if (this.state.extra) {
       var det = this.state.extra
       var credits = this.state.credits
@@ -87,17 +97,6 @@ class BlockRow extends Component {
         </td>
       </tr>)
     }
-    ret.push(
-      <tr key={block.hash} onClick={this.load} style={{cursor: 'pointer'}}>
-        <td><i className="glyphicon glyphicon-plus" /></td>
-        <td>{block.currency}</td>
-        <td>{block.height}</td>
-        <td>{block.difficulty}</td>
-        <td>{block.powalgo}</td>
-        <td><TimeAgo date={block.mined_at} /></td>
-        <td>{block.status}</td>
-      </tr>
-    )
     return ret
   }
 }
@@ -188,13 +187,13 @@ class Blocks extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th scope="col"></th>
-              <th scope="col">Currency</th>
-              <th scope="col">Height</th>
-              <th scope="col">Difficulty</th>
-              <th scope="col">Algo</th>
-              <th scope="col">Time</th>
-              <th scope="col">Status</th>
+              <th></th>
+              <th>Currency</th>
+              <th>Height</th>
+              <th>Difficulty</th>
+              <th>Algo</th>
+              <th>Time</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
