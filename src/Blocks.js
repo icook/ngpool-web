@@ -10,6 +10,7 @@ class BlockRow extends Component {
     super(props);
     this.state = {
       extra: null,
+      credits: [],
     }
     this.load = this.load.bind(this);
   }
@@ -20,7 +21,10 @@ class BlockRow extends Component {
     }
     this.props.axios.get("block/" + this.props.block.hash)
       .then(res => {
-        this.setState({extra: res.data.data.block})
+        this.setState({
+          extra: res.data.data.block,
+          credits: res.data.data.credits
+        })
       }).catch(error => {
         console.log(error)
       });
@@ -30,10 +34,20 @@ class BlockRow extends Component {
     var ret = []
     if (this.state.extra) {
       var det = this.state.extra
+      var credits = this.state.credits
+      var rows
+      rows = Object.keys(credits).map((i) => (
+        <tr key={credits[i].id}>
+          <td>{credits[i].username}</td>
+          <td>{credits[i].user_id}</td>
+          <td>{credits[i].amount}</td>
+          <td>{credits[i].amount / det.subsidy}</td>
+          <td>{credits[i].sharechain}</td>
+        </tr>))
       ret.push(
       <tr key={block.hash + "-extra"}>
         <td colSpan="7">
-          <h4>Block Details</h4>
+          <h4>Details</h4>
           <table className="table table-striped">
             <tbody>
             <tr>
@@ -45,11 +59,31 @@ class BlockRow extends Component {
               <td><code>{det.powhash}</code></td>
             </tr>
             <tr>
+              <th scope="col">Credited</th>
+              <td><code>{JSON.stringify(det.credited)}</code></td>
+            </tr>
+            <tr>
               <th scope="col">Payout Data</th>
               <td><ReactJson src={det.payout_data} displayDataTypes={false} indentWidth={2} name={null} enableClipboard={false} /></td>
             </tr>
             </tbody>
           </table>
+          { det.credited && 
+          [(<h4>Credits</h4>),
+          (<table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>User ID</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+                <th>Sharechain</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table>)]}
         </td>
       </tr>)
     }
