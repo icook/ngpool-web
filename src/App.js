@@ -16,6 +16,7 @@ import Profile from './Profile.js'
 import Blocks from './Blocks.js'
 import Services from './Services.js'
 import Login from './Login.js'
+import SignUp from './Signup.js'
 
 const Credits = () => (
   <div>
@@ -160,6 +161,9 @@ class App extends Component {
             )}/>
           <Route path="/login" render={props => (
             <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
+            )}/>
+          <Route path="/signup" render={props => (
+            <SignUp {...props} axios={this.state.axios}/>
             )}/>
           <Route path="/logout" render={props => {
             this.logout()
