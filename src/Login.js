@@ -17,6 +17,8 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event){
+    event.preventDefault()
+    event.stopPropagation()
     this.setState({error: ''})
     this.props.axios.post(`http://localhost:3000/v1/login`, this.state)
       .then(res => {
@@ -49,7 +51,7 @@ class Login extends Component {
               { this.state.error.length > 0 && <Alert type="error" msg={this.state.error} /> }
 
               <div style={{display: 'none'}} id="login-alert" className="alert alert-danger col-sm-12" />
-              <form className="form-horizontal">
+              <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
                   <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
@@ -70,7 +72,7 @@ class Login extends Component {
                 <div style={{marginTop: 10}} className="form-group">
                   {/* Button */}
                   <div className="col-sm-12 controls">
-                    <a onClick={this.handleSubmit} className="btn btn-success">Login</a>
+                    <button type="submit" className="btn btn-success">Login</button>
                   </div>
                 </div>
                 <div className="form-group">

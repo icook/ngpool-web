@@ -18,6 +18,8 @@ class SignUp extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event){
+    event.preventDefault()
+    event.stopPropagation()
     if (this.state.password !== this.state.passwordConfirm) {
       this.setState({error: 'Password must match'})
       return
@@ -44,7 +46,7 @@ class SignUp extends Component {
               { this.state.error.length > 0 && <Alert type="error" msg={this.state.error} /> }
 
               <div style={{display: 'none'}} id="login-alert" className="alert alert-danger col-sm-12" />
-              <div className="form-horizontal">
+              <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
                   <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
@@ -62,10 +64,10 @@ class SignUp extends Component {
                 </div>
                 <div style={{marginTop: 10}} className="form-group">
                   <div className="col-sm-12 controls">
-                    <button onClick={this.handleSubmit} className="btn btn-success">Sign Up</button>
+                    <button type="submit" className="btn btn-success">Sign Up</button>
                   </div>
                 </div>
-              </div>     
+              </form>     
             </div>                     
           </div>  
         </div>
