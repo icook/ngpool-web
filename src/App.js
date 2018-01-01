@@ -23,6 +23,8 @@ import Unpaid from './Unpaid.js'
 
 export class Alert extends Component {
     render () {
+      if (this.props.msg.length === 0)
+        return null
       var className = "alert "
       switch (this.props.type) {
       case "error":

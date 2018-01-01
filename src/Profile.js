@@ -34,7 +34,7 @@ class PayoutAddress extends Component {
 			<tr>
 				<th scope="row">{this.props.currency}</th>
 				<td>
-          { this.state.msg.length > 0 && <Alert type={this.state.msgtype} msg={this.state.msg} /> }
+          <Alert type={this.state.msgtype} msg={this.state.msg} />
 					<div className="input-group">
 						<input type="text" className="form-control" value={this.state.newVal}
 							onChange={(event) => this.setState({newVal: event.target.value})}/>

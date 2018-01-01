@@ -48,7 +48,7 @@ class Login extends Component {
               <div style={{float: 'right', fontSize: '80%', position: 'relative', top: '-10px'}}><a>Forgot password?</a></div>
             </div>     
             <div style={{paddingTop: 30}} className="panel-body">
-              { this.state.error.length > 0 && <Alert type="error" msg={this.state.error} /> }
+              <Alert type="error" msg={this.state.error} />
 
               <div style={{display: 'none'}} id="login-alert" className="alert alert-danger col-sm-12" />
               <form className="form-horizontal" onSubmit={this.handleSubmit}>
