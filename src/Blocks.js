@@ -4,6 +4,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import ReactJson from 'react-json-view'
 import MDSpinner from 'react-md-spinner';
+import {CurrencyVal} from './App.js';
 
 class BlockRow extends Component {
   constructor(props){
@@ -36,6 +37,7 @@ class BlockRow extends Component {
         <td><i className="glyphicon glyphicon-plus" /></td>
         <td>{block.currency}</td>
         <td>{block.height}</td>
+        <td><CurrencyVal amount={block.subsidy}/></td>
         <td>{block.difficulty}</td>
         <td>{block.powalgo}</td>
         <td><TimeAgo date={block.mined_at} /></td>
@@ -190,6 +192,7 @@ class Blocks extends Component {
               <th></th>
               <th>Currency</th>
               <th>Height</th>
+              <th>Reward</th>
               <th>Difficulty</th>
               <th>Algo</th>
               <th>Time</th>
