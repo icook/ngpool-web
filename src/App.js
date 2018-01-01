@@ -19,6 +19,7 @@ import Services from './Services.js'
 import Login from './Login.js'
 import SignUp from './Signup.js'
 import Payouts from './Payouts.js'
+import Unpaid from './Unpaid.js'
 
 export class Alert extends Component {
     render () {
@@ -143,24 +144,25 @@ class App extends Component {
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { this.state.loggedIn &&
+                  <li><Link to="/unpaid"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>}
+                  { this.state.loggedIn &&
                   <li><Link to="/payouts"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>}
                   { !this.state.loggedIn &&
-                  <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
-                  }
+                  <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>}
                   { !this.state.loggedIn &&
-                  <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
-                  }
+                  <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>}
                   { this.state.loggedIn &&
-                  <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>
-                  }
+                  <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>}
                   { this.state.loggedIn &&
-                  <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
-                  }
+                  <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>}
                 </ul>
               </div>
             </div>
           </nav>
-          <Route path="/payouts" authed={this.state.loggedIn} render={props => (
+          <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
+            <Unpaid {...props} axios={this.state.axios} />
+            )}/>
+          <PrivateRoute path="/payouts" authed={this.state.loggedIn} render={props => (
             <Payouts {...props} axios={this.state.axios} />
             )}/>
           <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
