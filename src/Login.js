@@ -20,7 +20,8 @@ class Login extends Component {
     event.preventDefault()
     event.stopPropagation()
     this.setState({error: ''})
-    this.props.axios.post(`http://localhost:3000/v1/login`, this.state)
+    // TODO: This is sloppy, pass the right obj
+    this.props.axios.post("login", this.state)
       .then(res => {
         var resp = res.data.data
         this.props.login(resp.username, resp.user_id, resp.token);
