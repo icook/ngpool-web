@@ -11,6 +11,7 @@ import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import './App.scss';
+import logo from './logo.png';
 
 import Profile from './Profile.js'
 import Blocks from './Blocks.js'
@@ -103,6 +104,7 @@ class App extends Component {
     var remaining = tokenInfo.exp - (Date.now() / 1000)
     if (remaining <= 0) {
       this.logout()
+      return
     } else {
       console.log((remaining / 60) + " minutes remaining on session")
     }
@@ -129,15 +131,19 @@ class App extends Component {
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                 </button>
-                <Link className="navbar-brand" to="/">NgPool</Link>
+                <Link className="navbar-brand" to="/">
+                  <span><img src={logo} height="25" alt="logo" class="d-inline-block align-top" /></span>&nbsp;
+                  NgPool
+                </Link>
               </div>
 
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
-                  <li><Link to="/">Blocks</Link></li>
-                  { this.state.loggedIn && <li><Link to="/payouts">Payouts</Link></li>}
+                  <li><Link to="/"><i class="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
+                  { this.state.loggedIn &&
+                  <li><Link to="/payouts"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>}
                   { !this.state.loggedIn &&
                   <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
                   }
