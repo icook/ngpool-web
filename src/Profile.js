@@ -77,7 +77,7 @@ class Profile extends Component {
       return (<Redirect to={{pathname: '/logout'}}/>)
 		var addrs = this.state.payoutAddrs
 		var rows = Object.keys(addrs).map((key) => (
-			<PayoutAddress axios={this.props.axios} currency={key} address={addrs[key]} />))
+			<PayoutAddress axios={this.props.axios} key={key} currency={key} address={addrs[key]} />))
     return (
       <div className="container">    
         <h2>Profile</h2>

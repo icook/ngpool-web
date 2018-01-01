@@ -17,12 +17,7 @@ import Blocks from './Blocks.js'
 import Services from './Services.js'
 import Login from './Login.js'
 import SignUp from './Signup.js'
-
-const Credits = () => (
-  <div>
-    <h2>Credits</h2>
-  </div>
-)
+import Payouts from './Payouts.js'
 
 export class Alert extends Component {
     render () {
@@ -50,6 +45,12 @@ export class Alert extends Component {
           {this.props.msg}
         </div>)
     }
+}
+
+export class CurrencyVal extends Component {
+  render () {
+    return (<span>{this.props.amount / 100000000}</span>)
+  }
 }
 const PrivateRoute = ({ component: Component, render: Render, ...rest }) => (
   <Route {...rest} render={props => (
@@ -134,7 +135,7 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                   <li><Link to="/">Blocks</Link></li>
-                  { this.state.loggedIn && <li><Link to="/credits">Credits</Link></li>}
+                  { this.state.loggedIn && <li><Link to="/payouts">Payouts</Link></li>}
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { !this.state.loggedIn &&
@@ -153,8 +154,8 @@ class App extends Component {
               </div>
             </div>
           </nav>
-          <Route path="/credits" authed={this.state.loggedIn} render={props => (
-            <Credits {...props} />
+          <Route path="/payouts" authed={this.state.loggedIn} render={props => (
+            <Payouts {...props} axios={this.state.axios} />
             )}/>
           <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
             <Profile {...props} axios={this.state.axios}/>
