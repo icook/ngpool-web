@@ -20,6 +20,7 @@ import Login from './Login.js'
 import SignUp from './Signup.js'
 import Payouts from './Payouts.js'
 import Unpaid from './Unpaid.js'
+import Workers from './Workers.js'
 
 export class Alert extends Component {
     render () {
@@ -145,47 +146,49 @@ class App extends Component {
                   <li><Link to="/"><i class="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
-                  { this.state.loggedIn &&
-                  <li><Link to="/unpaid"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>}
-                  { this.state.loggedIn &&
-                  <li><Link to="/payouts"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>}
-                  { !this.state.loggedIn &&
-                  <li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>}
-                  { !this.state.loggedIn &&
-                  <li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>}
-                  { this.state.loggedIn &&
-                  <li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>}
-                  { this.state.loggedIn &&
-                  <li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>}
+                  { this.state.loggedIn && [
+                    (<li><Link to="/unpaid"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>),
+                    (<li><Link to="/workers"><i class="fa fa-bolt" aria-hidden="true"></i> Workers</Link></li>),
+                    (<li><Link to="/payouts"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>),
+                    (<li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>),
+                    (<li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>)
+                  ]}
+                  { !this.state.loggedIn && [
+                  (<li><Link to="/signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>),
+                  (<li><Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>),
+                  ]}
                 </ul>
               </div>
             </div>
           </nav>
+          <PrivateRoute path="/workers" authed={this.state.loggedIn} render={props => (
+            <Workers {...props} axios={this.state.axios} />
+          )}/>
           <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
             <Unpaid {...props} axios={this.state.axios} />
-            )}/>
+          )}/>
           <PrivateRoute path="/payouts" authed={this.state.loggedIn} render={props => (
             <Payouts {...props} axios={this.state.axios} />
-            )}/>
+          )}/>
           <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
             <Profile {...props} axios={this.state.axios}/>
-            )}/>
+          )}/>
           <Route path="/login" render={props => (
             <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
-            )}/>
+          )}/>
           <Route path="/signup" render={props => (
             <SignUp {...props} axios={this.state.axios}/>
-            )}/>
+          )}/>
           <Route path="/logout" render={props => {
             this.logout()
             return (<Redirect to={{ pathname: '/login'}}/>)
-            }}/>
+          }}/>
           <Route exact path="/" render={props => (
             <Blocks {...props} axios={this.state.axios}/>
-            )}/>
+          )}/>
           <Route exact path="/services" render={props => (
             <Services {...props} axios={this.state.axios}/>
-            )}/>
+          )}/>
           <footer className="footer">
             <div className="container">
               <div className="col-md-offset-8">
