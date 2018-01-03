@@ -136,20 +136,20 @@ class App extends Component {
                   <span className="icon-bar"></span>
                 </button>
                 <Link className="navbar-brand" to="/">
-                  <span><img src={logo} height="25" alt="logo" class="d-inline-block align-top" /></span>&nbsp;
+                  <span><img src={logo} height="25" alt="logo" className="d-inline-block align-top" /></span>&nbsp;
                   NgPool
                 </Link>
               </div>
 
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
-                  <li><Link to="/"><i class="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
+                  <li><Link to="/"><i className="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { this.state.loggedIn && [
-                    (<li><Link to="/unpaid"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>),
-                    (<li><Link to="/workers"><i class="fa fa-bolt" aria-hidden="true"></i> Workers</Link></li>),
-                    (<li><Link to="/payouts"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>),
+                    (<li><Link to="/unpaid"><i className="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>),
+                    (<li><Link to="/workers"><i className="fa fa-bolt" aria-hidden="true"></i> Workers</Link></li>),
+                    (<li><Link to="/payouts"><i className="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>),
                     (<li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>),
                     (<li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>)
                   ]}
@@ -162,7 +162,7 @@ class App extends Component {
             </div>
           </nav>
           <PrivateRoute path="/workers" authed={this.state.loggedIn} render={props => (
-            <Workers {...props} axios={this.state.axios} />
+            <Workers {...props} axios={this.state.axios} username={this.state.username}/>
           )}/>
           <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
             <Unpaid {...props} axios={this.state.axios} />
