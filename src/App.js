@@ -82,7 +82,7 @@ class App extends Component {
       user_id:'',
       token:'',
       axios: axios.create({
-        baseURL: 'http://localhost:3000/v1/',
+        baseURL: process.env.REACT_APP_URI_ROOT,
         timeout: 1000,
       })
     };
