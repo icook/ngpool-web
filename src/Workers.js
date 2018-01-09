@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'react-select/dist/react-select.css';
 import MDSpinner from 'react-md-spinner';
-import { Tooltip, XAxis, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Tooltip, YAxis, XAxis, ResponsiveContainer, LineChart, Line } from 'recharts';
 import moment from 'moment';
 
 class Workers extends Component {
@@ -35,13 +35,24 @@ class Workers extends Component {
   componentDidMount() {
     this.load()
   }
+  yScale(val) {
+    if (val > 1e12)
+      return val / 10e12 + " Thps"
+    if (val > 1e9)
+      return val / 10e9 + " Ghps"
+    if (val > 1e6)
+      return val / 10e6 + " Mhps"
+    if (val > 1e3)
+      return val / 10e3 + " Khps"
+    return val + " hps"
+  }
   render() {
     var workers = {};
-    for (var workerName of Object.keys(this.state.workers)) {
-      workers[workerName] = this.state.workers[workerName]
-      workers[workerName].online = true
-    }
-    for (workerName of Object.keys(this.state.minuteShares)) {
+    // for (var workerName of Object.keys(this.state.workers)) {
+    //   workers[workerName] = this.state.workers[workerName]
+    //   workers[workerName].online = true
+    // }
+    for (var workerName of Object.keys(this.state.minuteShares)) {
       var slices = this.state.minuteShares[workerName];
       if (!(workerName in workers)) {
         // Base information off the most recent minute share, even tho he's not
@@ -54,21 +65,26 @@ class Workers extends Component {
         }
       }
       var times = {}
+      var timeFormat = 'ddd HH:mm'
+      var end = moment().startOf('minute')
+      var start = end.subtract(1, 'hours')
       for (var slice of slices) {
-        times[slice.minute] = slice
+        var m = moment(slice.minute)
+        if (slice < start || slice > end)
+          continue;
+        slice.axis = m.format(timeFormat)
+        slice.unix = m.unix()
+        times[slice.unix] = slice
       }
-      var start = moment().subtract(1, 'days').startOf('minute')
-      for (var i = 0; i < 1440; i++) {
-        var startStr = start.format()
-        if (!(startStr in times)) {
-          times[startStr] = {minute: startStr, hashrate: 0}
+      for (var i = 0; i < 60; i++) {
+        if (!(start.unix() in times)) {
+          times[start.unix()] = {unix: start.unix(), hashrate: 0, axis: start.format(timeFormat)}
         }
         start.add(1, 'minute')
       }
       workers[workerName].minute_shares = Object.values(times)
-      workers[workerName].minute_shares.sort((a, b) => new Date(a.minute) - new Date(b.minute))
+      workers[workerName].minute_shares.sort((a, b) => b.unix - a.unix)
     }
-    console.log(workers)
     var rows
     if (this.state.loadingWorkers || this.state.loadingMinuteShares) {
       rows = (<tr><td colSpan="8" className="jumbotron text-center">
@@ -89,8 +105,8 @@ class Workers extends Component {
               <td colSpan="4">
                 <ResponsiveContainer width="100%" height={100}>
                   <LineChart data={worker.minute_shares}>
-                    <XAxis dataKey="minute" 
-                      tickFormatter={timeStr => moment(timeStr).format('HH:mm')} />
+                    <YAxis tickFormatter={this.yScale}/>
+                    <XAxis dataKey="axis" />
                     <Line dot={false} type="monotone" dataKey="hashrate" stroke="#8884d8" />
                     <Tooltip formatter={(val, label, meta) => {
                       if (!meta.payload.stratum)
