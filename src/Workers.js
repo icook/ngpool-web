@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'react-select/dist/react-select.css';
 import MDSpinner from 'react-md-spinner';
-import { Tooltip, YAxis, XAxis, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { ReferenceLine, Tooltip, YAxis, XAxis, ResponsiveContainer, LineChart, Line } from 'recharts';
 import moment from 'moment';
 
 class Workers extends Component {
@@ -68,12 +68,14 @@ class Workers extends Component {
       var timeFormat = 'ddd HH:mm'
       var end = moment().startOf('minute')
       var start = end.subtract(1, 'hours')
+      var hashrateTotal = 0
       for (var slice of slices) {
         var m = moment(slice.minute)
         if (slice < start || slice > end)
           continue;
         slice.axis = m.format(timeFormat)
         slice.unix = m.unix()
+        hashrateTotal += slice.hashrate
         times[slice.unix] = slice
       }
       for (var i = 0; i < 60; i++) {
@@ -83,6 +85,7 @@ class Workers extends Component {
         start.add(1, 'minute')
       }
       workers[workerName].minute_shares = Object.values(times)
+      workers[workerName].average_hashrate = hashrateTotal / workers[workerName].minute_shares.length
       workers[workerName].minute_shares.sort((a, b) => a.unix - b.unix)
     }
     var rows
@@ -108,6 +111,7 @@ class Workers extends Component {
                     <YAxis tickFormatter={this.yScale}/>
                     <XAxis dataKey="axis" />
                     <Line animationDuration={500} dot={false} type="monotone" dataKey="hashrate" stroke="#8884d8" />
+                    <ReferenceLine y={worker.average_hashrate} label="Average"/>
                     <Tooltip formatter={(val, label, meta) => {
                       if (!meta.payload.stratum)
                         return "no data"
