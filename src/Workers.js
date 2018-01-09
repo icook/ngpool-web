@@ -48,10 +48,10 @@ class Workers extends Component {
   }
   render() {
     var workers = {};
-    // for (var workerName of Object.keys(this.state.workers)) {
-    //   workers[workerName] = this.state.workers[workerName]
-    //   workers[workerName].online = true
-    // }
+    for (var workerName of Object.keys(this.state.workers)) {
+      workers[workerName] = this.state.workers[workerName]
+      workers[workerName].online = true
+    }
     for (var workerName of Object.keys(this.state.minuteShares)) {
       var slices = this.state.minuteShares[workerName];
       if (!(workerName in workers)) {
