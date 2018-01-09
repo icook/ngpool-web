@@ -83,7 +83,7 @@ class Workers extends Component {
         start.add(1, 'minute')
       }
       workers[workerName].minute_shares = Object.values(times)
-      workers[workerName].minute_shares.sort((a, b) => b.unix - a.unix)
+      workers[workerName].minute_shares.sort((a, b) => a.unix - b.unix)
     }
     var rows
     if (this.state.loadingWorkers || this.state.loadingMinuteShares) {
@@ -107,7 +107,7 @@ class Workers extends Component {
                   <LineChart data={worker.minute_shares}>
                     <YAxis tickFormatter={this.yScale}/>
                     <XAxis dataKey="axis" />
-                    <Line dot={false} type="monotone" dataKey="hashrate" stroke="#8884d8" />
+                    <Line animationDuration={500} dot={false} type="monotone" dataKey="hashrate" stroke="#8884d8" />
                     <Tooltip formatter={(val, label, meta) => {
                       if (!meta.payload.stratum)
                         return "no data"
