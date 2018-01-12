@@ -12,6 +12,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import './App.scss';
 import logo from './logo.png';
+import MDSpinner from 'react-md-spinner';
 
 import Profile from './Profile.js'
 import Blocks from './Blocks.js'
@@ -21,6 +22,7 @@ import SignUp from './Signup.js'
 import Payouts from './Payouts.js'
 import Unpaid from './Unpaid.js'
 import Workers from './Workers.js'
+import Overview from './Overview.js'
 
 export class Alert extends Component {
     render () {
@@ -77,10 +79,12 @@ class App extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.state = {
-      loggedIn:false,
-      username:'',
-      user_id:'',
-      token:'',
+      common: {},
+      loading: true,
+      loggedIn: false,
+      username: '',
+      user_id: '',
+      token: '',
       axios: axios.create({
         baseURL: process.env.REACT_APP_URI_ROOT,
         timeout: 1000,
@@ -92,6 +96,11 @@ class App extends Component {
     if (user) {
       this.login(user.username, user.userId, user.token)
     }
+    this.state.axios.get("common").then(res => {
+      this.setState({common: res.data.data, loading: false})
+    }).catch(error => {
+      console.log(error)
+    });
   }
   logout() {
     localStorage.removeItem('user')
@@ -123,6 +132,43 @@ class App extends Component {
       username: username, userId: userId, token: token}));
   }
   render() {
+    var body
+    if (this.state.loading) {
+      body = (<MDSpinner size={50}/>)
+    } else {
+      body = (<span>
+        <PrivateRoute path="/workers" authed={this.state.loggedIn} render={props => (
+          <Workers {...props} axios={this.state.axios} username={this.state.username}/>
+        )}/>
+        <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
+          <Unpaid {...props} axios={this.state.axios} />
+        )}/>
+        <PrivateRoute path="/payouts" authed={this.state.loggedIn} render={props => (
+          <Payouts {...props} axios={this.state.axios} />
+        )}/>
+        <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
+          <Profile {...props} axios={this.state.axios}/>
+        )}/>
+        <Route path="/login" render={props => (
+          <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
+        )}/>
+        <Route exact path="/" render={props => (
+          <Overview {...props} common={this.state.common} axios={this.state.axios}/>
+        )}/>
+        <Route path="/signup" render={props => (
+          <SignUp {...props} axios={this.state.axios}/>
+        )}/>
+        <Route path="/logout" render={props => {
+          this.logout()
+          return (<Redirect to={{ pathname: '/login'}}/>)
+        }}/>
+        <Route path="/blocks" render={props => (
+          <Blocks {...props} axios={this.state.axios}/>
+        )}/>
+        <Route exact path="/services" render={props => (
+          <Services {...props} axios={this.state.axios}/>
+        )}/></span>)
+    }
     return (
       <Router>
         <div>
@@ -143,7 +189,8 @@ class App extends Component {
 
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
-                  <li><Link to="/"><i className="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
+                  <li><Link to="/"><i className="fa fa-search" aria-hidden="true"></i> Overview</Link></li>
+                  <li><Link to="/blocks"><i className="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { this.state.loggedIn && [
@@ -161,34 +208,7 @@ class App extends Component {
               </div>
             </div>
           </nav>
-          <PrivateRoute path="/workers" authed={this.state.loggedIn} render={props => (
-            <Workers {...props} axios={this.state.axios} username={this.state.username}/>
-          )}/>
-          <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
-            <Unpaid {...props} axios={this.state.axios} />
-          )}/>
-          <PrivateRoute path="/payouts" authed={this.state.loggedIn} render={props => (
-            <Payouts {...props} axios={this.state.axios} />
-          )}/>
-          <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
-            <Profile {...props} axios={this.state.axios}/>
-          )}/>
-          <Route path="/login" render={props => (
-            <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
-          )}/>
-          <Route path="/signup" render={props => (
-            <SignUp {...props} axios={this.state.axios}/>
-          )}/>
-          <Route path="/logout" render={props => {
-            this.logout()
-            return (<Redirect to={{ pathname: '/login'}}/>)
-          }}/>
-          <Route exact path="/" render={props => (
-            <Blocks {...props} axios={this.state.axios}/>
-          )}/>
-          <Route exact path="/services" render={props => (
-            <Services {...props} axios={this.state.axios}/>
-          )}/>
+          { body }
           <footer className="footer">
             <div className="container">
               <div className="col-md-offset-8">

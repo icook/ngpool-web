@@ -28,7 +28,7 @@ export class HashrateVal extends Component {
   }
 }
 
-class HashrateGraph extends Component {
+export class HashrateGraph extends Component {
   render() {
     var times = {}
     var timeFormat = 'ddd HH:mm'
