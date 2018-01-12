@@ -4,16 +4,28 @@ import MDSpinner from 'react-md-spinner';
 import { ReferenceLine, Tooltip, YAxis, XAxis, ResponsiveContainer, LineChart, Line } from 'recharts';
 import moment from 'moment';
 
-var yScale = (val) => {
+const numberWithCommas = (x) => {
+  var parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
+}
+
+const hashrateFormat = (val) => {
   if (val > 1e12)
-    return val / 10e12 + " Thps"
+    return numberWithCommas(val / 1e12) + " Thps"
   if (val > 1e9)
-    return val / 10e9 + " Ghps"
+    return numberWithCommas(val / 1e9) + " Ghps"
   if (val > 1e6)
-    return val / 10e6 + " Mhps"
+    return numberWithCommas(val / 1e6) + " Mhps"
   if (val > 1e3)
-    return val / 10e3 + " Khps"
-  return val + " hps"
+    return numberWithCommas(val / 1e3) + " Khps"
+  return numberWithCommas(val) + " hps"
+}
+
+export class HashrateVal extends Component {
+  render () {
+    return (<span>{hashrateFormat(this.props.amount)}</span>)
+  }
 }
 
 class HashrateGraph extends Component {
@@ -45,7 +57,7 @@ class HashrateGraph extends Component {
     return (
       <ResponsiveContainer width="100%" height={100}>
         <LineChart data={minute_shares}>
-          <YAxis tickFormatter={yScale}/>
+          <YAxis tickFormatter={hashrateFormat}/>
           <XAxis dataKey="axis" />
           <Line animationDuration={500} dot={false} type="monotone" dataKey="hashrate" stroke="#8884d8" />
           <ReferenceLine y={average_hashrate} label="Average"/>
@@ -54,7 +66,7 @@ class HashrateGraph extends Component {
             return "no data"
             return (
             <span>
-              { meta.payload.hashrate }<br/>
+              { hashrateFormat(meta.payload.hashrate) }<br/>
               difficulty: {Math.round(meta.payload.difficulty / meta.payload.shares * 100) / 100}<br/>
               stratum: {meta.payload.stratum}<br/>
               sharechain: {meta.payload.sharechain}
@@ -126,7 +138,7 @@ class Workers extends Component {
         var worker = workers[name]
         var rows = [(<tr key={name}>
           <td>{name}</td>
-          <td>{worker.hashrate}</td>
+          <td><HashrateVal amount={worker.hashrate}/></td>
           <td>{Math.round(worker.difficulty * 100, 2) / 100}</td>
           <td>{worker.online ? "Active" : "Inactive"}</td>
         </tr>)]
