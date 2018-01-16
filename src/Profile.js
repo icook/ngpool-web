@@ -2,53 +2,6 @@ import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom'
 import {Alert} from './App.js'
 
-class PayoutAddress extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-			newVal: this.props.address,
-      msg: '',
-      msgtype: ''
-    }
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleSubmit(){
-    this.props.axios.post("user/setpayout",
-      {address: this.state.newVal, currency: this.props.currency})
-			.then(res => {
-        this.setState({
-          msg: 'Successfully updated',
-          msgtype: 'success'
-        })
-			}).catch(error => {
-        this.setState({
-          msg: error.response.data.errors[0].title,
-          msgtype: 'error'
-        })
-			});
-		console.log(this.state.newVal)
-		console.log(this.props.currency)
-  }
-	render() {
-		return (
-			<tr>
-				<th scope="row">{this.props.currency}</th>
-				<td>
-          <Alert type={this.state.msgtype} msg={this.state.msg} />
-					<div className="input-group">
-						<input type="text" className="form-control" value={this.state.newVal}
-							onChange={(event) => this.setState({newVal: event.target.value})}/>
-						<span className="input-group-btn">
-							<button className="btn btn-info" type="button" onClick={() => this.handleSubmit()} >
-								Set</button>
-						</span>
-					</div>
-				</td>
-			</tr>
-		)
-	}
-}
-
 class Profile extends Component {
   constructor(props){
     super(props);
