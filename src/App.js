@@ -136,6 +136,7 @@ class App extends Component {
       username: username, userId: userId, token: token}));
   }
   render() {
+    var {markets} = this.state
     var body
     if (this.state.loading) {
       body = (<MDSpinner size={50}/>)
@@ -180,6 +181,16 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                   <li><Link to="/"><i className="fa fa-search" aria-hidden="true"></i> Home</Link></li>
+                  <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-bar-chart" aria-hidden="true"></i> Markets <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      { Object.keys(markets).map((id) => (
+                      <li><a href={"/market/" + id}>{markets[id].market_currency} / {markets[id].base_currency}</a></li>)) }
+                      
+                    </ul>
+                  </li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { this.state.loggedIn && [
