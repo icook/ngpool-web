@@ -13,6 +13,7 @@ import jwtDecode from 'jwt-decode';
 import './App.scss';
 import MDSpinner from 'react-md-spinner';
 
+import Market from './Market.js'
 import Profile from './Profile.js'
 import Login from './Login.js'
 import SignUp from './Signup.js'
@@ -85,7 +86,7 @@ class App extends Component {
       user_id: '',
       token: '',
       axios: axios.create({
-        baseURL: process.env.REACT_APP_URI_ROOT,
+        baseURL: "http" + process.env.REACT_APP_URI_ROOT,
         timeout: 1000,
       })
     };
@@ -147,6 +148,9 @@ class App extends Component {
         <Route path="/login" render={props => (
           <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
         )}/>
+        <Route path="/market/:id" render={props => (
+          <Market {...props}/>
+        )}/>
         <Route exact path="/" render={props => (
           <Home {...props}/>
         )}/>
@@ -180,13 +184,13 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                   <li><Link to="/"><i className="fa fa-search" aria-hidden="true"></i> Home</Link></li>
-                  <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                      <i class="fa fa-bar-chart" aria-hidden="true"></i> Markets <span class="caret"></span>
+                  <li className="dropdown">
+                    <a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      <i className="fa fa-bar-chart" aria-hidden="true"></i> Markets <span className="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul className="dropdown-menu">
                       { Object.keys(markets).map((id) => (
-                      <li><a href={"/market/" + id}>{markets[id].market_currency} / {markets[id].base_currency}</a></li>)) }
+                      <li key={id}><a href={"/market/" + id}>{markets[id].market_currency} / {markets[id].base_currency}</a></li>)) }
                       
                     </ul>
                   </li>

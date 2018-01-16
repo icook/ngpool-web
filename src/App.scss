@@ -1,5 +1,20 @@
 $footer-height: 100px;
 
+table.table-liquidity {
+  font-family: opensans, sans-serif, btcglyph;
+  tbody tr td {
+    padding: 2px;
+  }
+}
+
+tbody.buy {
+  color: #539153;
+}
+
+tbody.sell {
+  color: #8B4C3B;
+}
+
 html {
   position: relative;
   min-height: 100%;

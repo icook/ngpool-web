@@ -9,7 +9,6 @@ class Profile extends Component {
 			user: {},
       msg: "",
       msgType: "",
-			payoutAddrs: {},
       oldPassword: "",
       newPassword: "",
       newPasswordConfirm: "",
