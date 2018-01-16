@@ -6,7 +6,7 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username:'',
+      email:'',
       password:'',
       error:'',
       redirectToReferrer: false
@@ -24,7 +24,7 @@ class Login extends Component {
     this.props.axios.post("login", this.state)
       .then(res => {
         var resp = res.data.data
-        this.props.login(resp.username, resp.user_id, resp.token);
+        this.props.login(this.state.email, resp.user_id, resp.token);
         this.setState({ redirectToReferrer: true })
       }).catch(error => {
           this.setState({error: error.response.data.errors[0].title})
@@ -55,13 +55,13 @@ class Login extends Component {
               <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
-                  <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
-                    type="text" className="form-control" placeholder="username" />
+                  <input value={this.state.email} onChange={(event) => this.setState({email: event.target.value})}
+                    type="text" className="form-control" placeholder="Email" />
                 </div>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-lock" /></span>
                   <input type="password" value={this.state.password} onChange={(event) => this.setState({password: event.target.value})}
-                    className="form-control" name="password" placeholder="password" />
+                    className="form-control" name="password" placeholder="Password" />
                 </div>
                 <div className="input-group">
                   <div className="checkbox">
