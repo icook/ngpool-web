@@ -6,7 +6,9 @@ class SignUp extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username:'',
+      first_name:'',
+      last_name:'',
+      email:'',
       password:'',
       passwordConfirm:'',
       error:'',
@@ -49,18 +51,28 @@ class SignUp extends Component {
               <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
-                  <input value={this.state.username} onChange={(event) => this.setState({username: event.target.value})}
-                    type="text" className="form-control" placeholder="username" />
+                  <input value={this.state.first_name} onChange={(event) => this.setState({first_name: event.target.value})}
+                    type="text" className="form-control" placeholder="First Name" />
+                </div>
+                <div style={{marginBottom: 25}} className="input-group">
+                  <span className="input-group-addon"><i className="glyphicon glyphicon-user" /></span>
+                  <input value={this.state.last_name} onChange={(event) => this.setState({last_name: event.target.value})}
+                    type="text" className="form-control" placeholder="Last Name" />
+                </div>
+                <div style={{marginBottom: 25}} className="input-group">
+                  <span className="input-group-addon"><i className="fa fa-envelope-o" /></span>
+                  <input value={this.state.email} onChange={(event) => this.setState({email: event.target.value})}
+                    type="text" className="form-control" placeholder="Email" />
                 </div>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-lock" /></span>
                   <input type="password" value={this.state.password} onChange={(event) => this.setState({password: event.target.value})}
-                    className="form-control" name="password" placeholder="password" />
+                    className="form-control" name="password" placeholder="Password" />
                 </div>
                 <div style={{marginBottom: 25}} className="input-group">
                   <span className="input-group-addon"><i className="glyphicon glyphicon-lock" /></span>
                   <input type="password" value={this.state.passwordConfirm} onChange={(event) => this.setState({passwordConfirm: event.target.value})}
-                    className="form-control" name="password" placeholder="password" />
+                    className="form-control" name="password" placeholder="Password Confirm" />
                 </div>
                 <div style={{marginTop: 10}} className="form-group">
                   <div className="col-sm-12 controls">
