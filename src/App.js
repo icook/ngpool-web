@@ -15,14 +15,14 @@ import logo from './logo.png';
 import MDSpinner from 'react-md-spinner';
 
 import Profile from './Profile.js'
-import Blocks from './Blocks.js'
-import Services from './Services.js'
 import Login from './Login.js'
 import SignUp from './Signup.js'
-import Payouts from './Payouts.js'
-import Unpaid from './Unpaid.js'
-import Workers from './Workers.js'
-import Overview from './Overview.js'
+
+class Home extends Component {
+  render() {
+    return (<h1>Home babiiiiiiiii</h1>)
+  }
+}
 
 export class Alert extends Component {
     render () {
@@ -79,7 +79,7 @@ class App extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.state = {
-      common: {},
+      markets: [],
       loading: true,
       loggedIn: false,
       username: '',
@@ -96,8 +96,12 @@ class App extends Component {
     if (user) {
       this.login(user.username, user.userId, user.token)
     }
-    this.state.axios.get("common").then(res => {
-      this.setState({common: res.data.data, loading: false})
+    this.state.axios.get("markets").then(res => {
+      var markets = {}
+      for (var market of res.data.data.markets) {
+        markets[market.id] = market
+      }
+      this.setState({markets: markets, loading: false})
     }).catch(error => {
       console.log(error)
     });
@@ -137,15 +141,6 @@ class App extends Component {
       body = (<MDSpinner size={50}/>)
     } else {
       body = (<span>
-        <PrivateRoute path="/workers" authed={this.state.loggedIn} render={props => (
-          <Workers {...props} axios={this.state.axios} username={this.state.username}/>
-        )}/>
-        <PrivateRoute path="/unpaid" authed={this.state.loggedIn} render={props => (
-          <Unpaid {...props} axios={this.state.axios} />
-        )}/>
-        <PrivateRoute path="/payouts" authed={this.state.loggedIn} render={props => (
-          <Payouts {...props} axios={this.state.axios} />
-        )}/>
         <PrivateRoute path="/profile" authed={this.state.loggedIn} render={props => (
           <Profile {...props} axios={this.state.axios}/>
         )}/>
@@ -153,7 +148,7 @@ class App extends Component {
           <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
         )}/>
         <Route exact path="/" render={props => (
-          <Overview {...props} common={this.state.common} axios={this.state.axios}/>
+          <Home {...props}/>
         )}/>
         <Route path="/signup" render={props => (
           <SignUp {...props} axios={this.state.axios}/>
@@ -162,12 +157,7 @@ class App extends Component {
           this.logout()
           return (<Redirect to={{ pathname: '/login'}}/>)
         }}/>
-        <Route path="/blocks" render={props => (
-          <Blocks {...props} axios={this.state.axios}/>
-        )}/>
-        <Route exact path="/services" render={props => (
-          <Services {...props} axios={this.state.axios}/>
-        )}/></span>)
+        </span>)
     }
     return (
       <Router>
@@ -189,14 +179,10 @@ class App extends Component {
 
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
-                  <li><Link to="/"><i className="fa fa-search" aria-hidden="true"></i> Overview</Link></li>
-                  <li><Link to="/blocks"><i className="fa fa-cubes" aria-hidden="true"></i> Blocks</Link></li>
+                  <li><Link to="/"><i className="fa fa-search" aria-hidden="true"></i> Home</Link></li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                   { this.state.loggedIn && [
-                    (<li><Link to="/unpaid"><i className="fa fa-hourglass-half" aria-hidden="true"></i> Unpaid</Link></li>),
-                    (<li><Link to="/workers"><i className="fa fa-bolt" aria-hidden="true"></i> Workers</Link></li>),
-                    (<li><Link to="/payouts"><i className="fa fa-paper-plane-o" aria-hidden="true"></i> Payouts</Link></li>),
                     (<li><Link to="/profile"><span className="glyphicon glyphicon-user"></span> {this.state.username}</Link></li>),
                     (<li><Link to="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>)
                   ]}
