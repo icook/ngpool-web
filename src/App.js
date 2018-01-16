@@ -11,7 +11,6 @@ import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import './App.scss';
-import logo from './logo.png';
 import MDSpinner from 'react-md-spinner';
 
 import Profile from './Profile.js'
@@ -173,8 +172,8 @@ class App extends Component {
                   <span className="icon-bar"></span>
                 </button>
                 <Link className="navbar-brand" to="/">
-                  <span><img src={logo} height="25" alt="logo" className="d-inline-block align-top" /></span>&nbsp;
-                  NgPool
+                  {/* <span><img src={logo} height="25" alt="logo" className="d-inline-block align-top" /></span>&nbsp; */}
+                  qTrade
                 </Link>
               </div>
 
