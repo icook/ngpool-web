@@ -84,10 +84,7 @@ class Profile extends Component {
     this.props.axios.get("user/me")
 			.then(res => {
 				var resp = res.data.data
-        this.setState({
-					user: resp.user,
-					payoutAddrs: resp["payout_addresses"]
-				})
+        this.setState({user: resp.user})
 			}).catch(error => {
         if (error.response.status === 403) {
           this.setState({redirect: true})
@@ -96,37 +93,26 @@ class Profile extends Component {
 			});
   }
   render() {
-    if (this.state.redirect)
+    if (this.state.redirect) // For 403 handling
       return (<Redirect to={{pathname: '/logout'}}/>)
-		var addrs = this.state.payoutAddrs
-		var rows = Object.keys(addrs).map((key) => (
-			<PayoutAddress axios={this.props.axios} key={key} currency={key} address={addrs[key]} />))
     return (
       <div className="container">    
         <h2>Profile</h2>
         <table className="table table-striped">
 					<tbody>
           <tr>
-            <th scope="row">Username</th>
-            <td>{ this.state.user.username }</td>
+            <th scope="row">First Name</th>
+            <td>{ this.state.user.fname }</td>
+          </tr>
+          <tr>
+            <th scope="row">Last Name</th>
+            <td>{ this.state.user.lname }</td>
           </tr>
           <tr>
             <th scope="row">Email</th>
             <td>{ this.state.user.email }</td>
           </tr>
 				</tbody>
-        </table>
-        <h2>Payout Addresses</h2>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Currency</th>
-              <th scope="col">Payout Address</th>
-            </tr>
-          </thead>
-          <tbody>
-						{rows}
-          </tbody>
         </table>
         <h2>Change Password</h2>
         <Alert type={this.state.msgType} msg={this.state.msg} />
