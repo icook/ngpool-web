@@ -12,6 +12,7 @@ class Market extends Component {
 			buyLiquidity: {},
 			trades: [],
     };
+    this.market = this.props.markets[this.props.match.params.id]
     this.firstLoad = true;
     this.websocket = null;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,32 +37,26 @@ class Market extends Component {
       }
       return text;
   }
+  updateLiquidity(updates, book) {
+    for (var priceRaw in updates) { 
+      var price = num(priceRaw).set_precision(8);
+      var change = num(updates[price]).set_precision(8);
+      if (book[price] === undefined) {
+        book[price] = {price: price, amount: num(0)}
+      }
+      book[price].amount = change.add(book[price].amount)
+      if (book[price].amount == 0) {
+        delete book[price];
+      }
+    }
+    return book
+  }
   msg(msg) {
     var dat = JSON.parse(msg.data);
     this.setState((prevState, props) => {
       var {sellLiquidity, buyLiquidity} = prevState
-      for (var priceRaw in dat.blu) { 
-        var price = num(priceRaw);
-        var change = num(dat.blu[priceRaw]);
-        if (buyLiquidity[priceRaw] === undefined) {
-          buyLiquidity[priceRaw] = {price: price, amount: num(0)}
-        }
-        buyLiquidity[priceRaw].amount = change.add(buyLiquidity[price].amount)
-        if (buyLiquidity[priceRaw].amount == 0) {
-          delete buyLiquidity[priceRaw];
-        }
-      }
-      for (priceRaw in dat.slu) { 
-        price = num(priceRaw);
-        change = num(dat.slu[priceRaw]);
-        if (sellLiquidity[priceRaw] === undefined) {
-          sellLiquidity[priceRaw] = {price: price, amount: num(0)}
-        }
-        sellLiquidity[priceRaw].amount = change.add(sellLiquidity[priceRaw].amount)
-        if (sellLiquidity[priceRaw].amount == 0) {
-          delete sellLiquidity[priceRaw];
-        }
-      }
+      buyLiquidity = this.updateLiquidity(dat.blu, buyLiquidity)
+      sellLiquidity = this.updateLiquidity(dat.slu, sellLiquidity)
       return {sellLiquidity: sellLiquidity, buyLiquidity: buyLiquidity}
     }, () => {
       // Only do this when loading initial data
@@ -74,7 +69,7 @@ class Market extends Component {
     )
   }
   componentDidMount() {
-    var channel = "market_" + this.props.match.params.id;
+    var channel = "market_" + this.market.id;
 
     this.websocket = new WebSocket("ws" + process.env.REACT_APP_URI_ROOT + "ws");
     this.websocket.onmessage = this.msg.bind(this);
@@ -95,11 +90,11 @@ class Market extends Component {
         <div className="row">
           <div className="col-md-6">
             <h3>Orderbook</h3>
-            <table className="table" style={{marginBottom: 0}}>
+            <table className="table table-liquidity" style={{marginBottom: 0}}>
               <thead>
                 <tr>
-                  <th>Price</th>
-                  <th>Amount</th>
+                  <th width="50%">Price ({this.market.base_currency})</th>
+                  <th>Amount ({this.market.market_currency})</th>
                 </tr>
               </thead>
             </table>
@@ -108,7 +103,7 @@ class Market extends Component {
                 <tbody className="buy">
                   { Object.keys(buyLiquidity).sort().slice(-25, -1).map((price) => (
                   <tr key={price}>
-                    <td>{buyLiquidity[price].price.toString()}</td>
+                    <td width="50%">{buyLiquidity[price].price.toString()}</td>
                     <td>{buyLiquidity[price].amount.toString()}</td>
                   </tr>
                   ))}

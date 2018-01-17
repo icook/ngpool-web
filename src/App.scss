@@ -7,7 +7,9 @@ $footer-height: 100px;
 
 table.table-liquidity {
   font-family: opensans, sans-serif, btcglyph;
-  tbody tr td {
+  font-weight: bold;
+  tbody tr td, thead tr th {
+    text-align: right;
     padding: 2px;
   }
 }

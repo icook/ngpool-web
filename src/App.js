@@ -149,7 +149,7 @@ class App extends Component {
           <Login {...props} login={this.login} authed={this.state.loggedIn} axios={this.state.axios}/>
         )}/>
         <Route path="/market/:id" render={props => (
-          <Market {...props}/>
+          <Market markets={markets} {...props}/>
         )}/>
         <Route exact path="/" render={props => (
           <Home {...props}/>
