@@ -3393,6 +3393,10 @@ inquirer@3.3.0, inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+int@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/int/-/int-0.2.0.tgz#589f05b03b8d8c08c918c8884784cb62a94ef47e"
+
 internal-ip@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-1.2.0.tgz#ae9fbf93b984878785d50a8de1b356956058cf5c"
@@ -4695,6 +4699,12 @@ nth-check@~1.0.1:
 num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
+
+num@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/num/-/num-0.3.0.tgz#a82e2a9b1fc52fbab313358cdf92905e6f03f287"
+  dependencies:
+    int "0.2.0"
 
 number-is-nan@^1.0.0:
   version "1.0.1"

@@ -1,4 +1,9 @@
 $footer-height: 100px;
+.liquidity-container {
+  height: 300px;
+  overflow: scroll;
+  overflow-x:hidden;
+}
 
 table.table-liquidity {
   font-family: opensans, sans-serif, btcglyph;
