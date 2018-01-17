@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom'
 import num from 'num'
+import TimeAgo from 'react-timeago'
 
 class Market extends Component {
   constructor(props){
@@ -10,7 +11,7 @@ class Market extends Component {
       price: null,
 			sellLiquidity: {},
 			buyLiquidity: {},
-			trades: [],
+			recentTrades: [],
     };
     this.market = this.props.markets[this.props.match.params.id]
     this.firstLoad = true;
@@ -54,10 +55,22 @@ class Market extends Component {
   msg(msg) {
     var dat = JSON.parse(msg.data);
     this.setState((prevState, props) => {
-      var {sellLiquidity, buyLiquidity} = prevState
+      var {recentTrades, sellLiquidity, buyLiquidity} = prevState
       buyLiquidity = this.updateLiquidity(dat.blu, buyLiquidity)
       sellLiquidity = this.updateLiquidity(dat.slu, sellLiquidity)
-      return {sellLiquidity: sellLiquidity, buyLiquidity: buyLiquidity}
+
+      if (dat.tu !== null) {
+        for (var trade of dat.tu) {
+          trade.t = dat.time
+          recentTrades.unshift(trade)
+        }
+        recentTrades = recentTrades.slice(0, 100)
+      }
+      return {
+        recentTrades: recentTrades,
+        sellLiquidity: sellLiquidity,
+        buyLiquidity: buyLiquidity
+      }
     }, () => {
       // Only do this when loading initial data
       if (this.firstLoad) {
@@ -65,8 +78,7 @@ class Market extends Component {
           {behavior: "instant", block: "center", inline: "center"})
         this.firstLoad = false;
       }
-      }
-    )
+    })
   }
   componentDidMount() {
     var channel = "market_" + this.market.id;
@@ -82,12 +94,35 @@ class Market extends Component {
     }
   }
   render() {
-    var {sellLiquidity, buyLiquidity} = this.state
+    var {recentTrades, sellLiquidity, buyLiquidity} = this.state
     if (this.state.redirect) // For 403 handling
       return (<Redirect to={{pathname: '/logout'}}/>)
     return (
       <div className="container">
         <div className="row">
+          <div className="col-md-6">
+            <h3>Recent Trades</h3>
+            <div className="liquidity-container" style={{height: 370}}>
+              <table className="table table-liquidity" style={{marginBottom: 0}}>
+                <thead>
+                  <tr>
+                    <th>Price ({this.market.base_currency})</th>
+                    <th>Amount ({this.market.market_currency})</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { recentTrades.map((trade) => (
+                  <tr>
+                    <td>{trade.p}</td>
+                    <td>{trade.a}</td>
+                    <td><TimeAgo date={trade.t} /></td>
+                  </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
           <div className="col-md-6">
             <h3>Orderbook</h3>
             <table className="table table-liquidity" style={{marginBottom: 0}}>
@@ -108,9 +143,11 @@ class Market extends Component {
                   </tr>
                   ))}
                 </tbody>
-                <tr>
-                  <td colSpan="2" ref="spread">Spread</td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td colSpan="2" ref="spread">Spread</td>
+                  </tr>
+                </tbody>
                 <tbody className="sell">
                   { Object.keys(sellLiquidity).sort().slice(-25, -1).map((price) => (
                   <tr key={price}>
